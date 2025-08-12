@@ -1,4 +1,4 @@
-import { Menu, ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart, X } from "lucide-react";
 import { Button } from '../ui/button';
 import {motion } from "framer-motion";
 import { useState } from "react";
@@ -23,8 +23,12 @@ export default function Navbar() {
     return(
         <nav className="w-full bg-white shadow-sm">
             <div className="container mx-auto px-4 flex items-center justify-between h-16">
+                {/* Mobile Menu Button */}
+                   <Button className="md:hidden" variant="ghost" size="icon" onClick={() => setMobileOpen(true)} aria-label="Menu">
+                          <Menu className="h-6 w-6" />
+                   </Button>
                 {/* logo */}
-                <img src={logo} alt="Logo" />
+                <img className="ml-[-5rem] md:ml-0" src={logo} alt="Logo" />
 
                 {/* desktop nav */}
                 <ul className="hidden md:flex gap-8 items-center">
@@ -58,10 +62,7 @@ export default function Navbar() {
                        <AvatarFallback>U</AvatarFallback>
                    </Avatar>
                     
-                   {/* mobile menu button */}
-                   <Button className="md:hidden" variant="ghost" size="icon" onClick={() => setMobileOpen(true)} aria-label="Menu">
-                          <Menu className="h-6 w-6" />
-                   </Button>
+                 
                 </div>
             </div>
 
@@ -69,17 +70,17 @@ export default function Navbar() {
             {
                 mobileOpen && (
                     <motion.div
-                     initial={{x: '100%'}}
-                     animate={{x: 0}}
-                     exit={{x: '100%'}}
+                     initial={{right: '100%'}}
+                     animate={{right: 0}}
+                     exit={{right: '100%'}}
                      className="fixed inset-0 bg-white z-30 p-6 flex flex-col gap-8 md:hidden"
                 >
                     <button 
-                    className="self-end mb-4"
+                    className="self-start mb-4"
                     aria-label="close menu"
                     onClick={() => setMobileOpen(false)}
                     >
-                        <Menu className="h-6 w-6 rotate-90" />
+                        <X aria-label="close menu" className="h-6 w-6 rotate-90" />
                     </button>
 
                     {NAV_LINK.map(link => (
