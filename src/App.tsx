@@ -1,11 +1,11 @@
-import { Button } from "./components/ui/button"
+import Navbar from "./components/navbar/navbar"
 
 function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button>Click me</Button>
-    </div>
+   <>
+   <Navbar />
+   </>
   )
 }
 
-export default App
+export { App }
