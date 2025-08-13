@@ -205,7 +205,7 @@ type ProductData = {
 
           {/* Add to cart button */}
           <Button
-            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
+            className="font-sans flex-1 bg-orange-400 p-[1.5rem] hover:bg-orange-600 text-white text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-6 w-6" />
