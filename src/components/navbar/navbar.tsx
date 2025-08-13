@@ -6,6 +6,9 @@ import logo from '../../assets/images/logo.svg'
 import { Avatar, AvatarImage,AvatarFallback } from "../ui/avatar";
 import ImageAvatar from '../../assets/images/imageavatar.png'
 
+// Import Cart Modal & useCart hook
+import  CartModal  from "../cartModal/cartModal";
+import { useCart } from "../../hooks/useCart";
 
 
 const NAV_LINK: { label: string; href: string }[] = [
@@ -19,7 +22,8 @@ const NAV_LINK: { label: string; href: string }[] = [
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-    // const [itemCount, setItemCount] = useState<number>(0);
+    const [cartOpen, setCartOpen] = useState<boolean>(false);
+   const { items } = useCart();
 
    
 
@@ -52,13 +56,23 @@ export default function Navbar() {
                 {/* icons */}
                 <div className="flex items-center gap-6">
                    {/* cart */}
-                   <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
+                   <Button 
+                   variant="ghost" 
+                   size="icon" 
+                   aria-label="Cart" 
+                   className="relative"
+                   onClick={() => setCartOpen((open) => !open)}
+                   >
                        <ShoppingCart className="h-6 w-6" />
                        {/* cart item count */}
-                       <span className="absolute top-2 right-2 bg-orange-500 text-white rounded-full px-1 text-xs">
-                            {0}
-                       </span>
+                      {items.length > 0 && (
+                        <span className="absolute top-1 right-1 bg-orange-500 text-xs rounded-full px-2 text-white font-bold">
+                            {items.reduce((sum, i) => sum + i.quantity, 0)}
+                        </span>
+                        )}
                    </Button>
+                     {/* Cart Modal */}
+                     <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
 
                    {/* Avatar/Profile */}
                    <Avatar className="cursor-pointer border hover:border-orange-500 cursor-pointer">

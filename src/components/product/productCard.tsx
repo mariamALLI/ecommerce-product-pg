@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 import Iconminus from '../../assets/images/iconminus.svg'
 import Iconplus from '../../assets/images/iconplus.svg'
-// import Iconprevious from '../../assets/images/iconprevious.svg'
+
+import { useCart } from '../../hooks/useCart'
 
 /*Image Import*/
 import productImage1 from '../../assets/images/imageproduct1.jpg'
@@ -39,6 +40,22 @@ type ProductData = {
     price: 125.0,
     discount: 0.5,
     oldPrice: 250.0,
+  }
+
+  // Cart Context
+  const { addItem } = useCart();
+
+  const handleAddToCart = (): void => {
+    // Check if quantity is greater than 0 before adding to cart
+   if (quantity > 0) {
+     addItem({
+       id: '1',
+       title: productData.title,
+       price: productData.price,
+       image: productsImgs[activeImg],
+       quantity,
+     });
+   }
   }
 
   // Handlers
@@ -188,8 +205,10 @@ type ProductData = {
 
           {/* Add to cart button */}
           <Button
-            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold flex items-center justify-center gap-2 shadow-md">
-           <ShoppingCart className="h-6 w-6" />
+            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="h-6 w-6" />
             Add to Cart
           </Button>
         </div>
