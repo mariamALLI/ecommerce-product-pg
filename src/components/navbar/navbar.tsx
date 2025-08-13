@@ -8,7 +8,7 @@ import ImageAvatar from '../../assets/images/imageavatar.png'
 
 
 
-const NAV_LINK = [
+const NAV_LINK: { label: string; href: string }[] = [
     {label: 'Collections', href: '#collections'},
     {label: 'Men', href: '#men'},
     {label: 'Women', href: '#women'},
@@ -18,14 +18,20 @@ const NAV_LINK = [
 
 
 export default function Navbar() {
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+    const [itemCount, setItemCount] = useState<number>(0);
+
+    function handleAddToCart() {
+        setItemCount(itemCount + 1);
+    }
 
     return(
-        <nav className="w-full bg-white shadow-sm">
+        <nav className="w-[95%] md:w-[80%] mx-auto p-4 bg-white">
+
             <div className="container mx-auto px-4 flex items-center justify-between h-16">
                 {/* Mobile Menu Button */}
                    <Button className="md:hidden" variant="ghost" size="icon" onClick={() => setMobileOpen(true)} aria-label="Menu">
-                          <Menu className="h-6 w-6" />
+                          <Menu className="h-8 w-8 ml-[-3rem]" />
                    </Button>
                 {/* logo */}
                 <img className="ml-[-5rem] md:ml-0" src={logo} alt="Logo" />
@@ -51,27 +57,39 @@ export default function Navbar() {
                    <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
                        <ShoppingCart className="h-6 w-6" />
                        {/* cart item count */}
-                       {/* <span className="absolute top-2 right-2 bg-orange-500 text-white rounded-full px-1 text-xs">
-                           3
-                       </span> */}
+                       <span className="absolute top-2 right-2 bg-orange-500 text-white rounded-full px-1 text-xs">
+                            {itemCount}
+                       </span>
                    </Button>
 
                    {/* Avatar/Profile */}
-                   <Avatar>
+                   <Avatar className="cursor-pointer hover:text-orange-500">
                        <AvatarImage src={ImageAvatar} alt="User Avatar" />
                        <AvatarFallback>U</AvatarFallback>
                    </Avatar>
                     
                  
                 </div>
+                
             </div>
-
+            <hr className="hidden sm:block border-gray-200 mb-4" />
             {/* Mobile Nav Drawer */}
             {
                 mobileOpen && (
+                    <>
+                     {/* Overlay */}
+                    <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.6 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black bg-opacity-60 z-20"
+                    onClick={() => setMobileOpen(false)} // Optional: close menu when overlay clicked
+                    />
+
+                    {/* Mobile Nav Drawer */}
                     <motion.div
                      initial={{right: '100%'}}
-                     animate={{right: 0}}
+                     animate={{right: '35%'}}
                      exit={{right: '100%'}}
                      className="fixed inset-0 bg-white z-30 p-6 flex flex-col gap-8 md:hidden"
                 >
@@ -94,6 +112,7 @@ export default function Navbar() {
                             </a>
                     ))}
                     </motion.div>
+                    </>
             )}
         </nav>
     );
