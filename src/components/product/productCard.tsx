@@ -267,7 +267,7 @@ type ProductData = {
                     <button
                     key={img}
                     className={clsx(
-                      "w-16 h-16 overflow-hidden rounded-xl border-2",
+                      "w-16 h-16 overflow-hidden rounded-xl border-2 cursor-pointer",
                       index === activeImg
                       ? "border-orange-400 shadow-md"
                       : "border-transparent opacity-80 hover:border-orange-400 hover:opacity-100"
