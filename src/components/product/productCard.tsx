@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Button } from '../ui/button'
-import { ChevronRight, ChevronLeft, ShoppingCart } from 'lucide-react'
+import { ChevronRight, ChevronLeft, ShoppingCart, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 import Iconminus from '../../assets/images/iconminus.svg'
 import Iconplus from '../../assets/images/iconplus.svg'
+// import Iconprevious from '../../assets/images/iconprevious.svg'
 
 /*Image Import*/
 import productImage1 from '../../assets/images/imageproduct1.jpg'
@@ -13,15 +14,24 @@ import productImage3 from '../../assets/images/imageproduct3.jpg'
 import productImage4 from '../../assets/images/imageproduct4.jpg'
 
 // Product Images Array
-const productsImgs = [productImage1, productImage2, productImage3, productImage4]
+const productsImgs:string[] = [productImage1, productImage2, productImage3, productImage4]
 
 export default function ProductCard() {
   const [activeImg, setActiveImg] = useState<number>(0)
   const [showGallery, setShowGallery] = useState<boolean>(false)
   const [quantity, setQuantity] = useState<number>(0)
 
+type ProductData = {
+  company: string
+  title: string
+  description: string
+  price: number
+  discount: number
+  oldPrice: number
+}
+
   // Product Data
-  const productData = {
+  const productData: ProductData = {
     company: 'Sneaker Company',
     title: 'Fall Limited Edition Sneakers',
     description:
@@ -32,14 +42,14 @@ export default function ProductCard() {
   }
 
   // Handlers
-  const handlePrevImg = () => setActiveImg((prev) => (prev > 0 ? prev - 1 : prev))
-  const handleNextImg = () =>
+  const handlePrevImg = (): void => setActiveImg((prev) => (prev > 0 ? prev - 1 : prev))
+  const handleNextImg = (): void =>
     setActiveImg((prev) => (prev < productsImgs.length - 1 ? prev + 1 : prev))
-  const handleThumbnailClick = (index: number) => setActiveImg(index)
+  const handleThumbnailClick = (index: number): void => setActiveImg(index)
 
   // Quantity Handlers
-  const handleIncreaseQuantity = () => setQuantity((prev) => prev + 1)
-  const handleDecreaseQuantity = () => setQuantity((prev) => (prev > 0 ? prev - 1 : 0))
+  const handleIncreaseQuantity = (): void => setQuantity((prev) => prev + 1)
+  const handleDecreaseQuantity = (): void => setQuantity((prev) => (prev > 0 ? prev - 1 : 0))
 
   return (
     <section className="w-[95%] md:w-[80%] max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 py-10 items-center">
@@ -83,12 +93,13 @@ export default function ProductCard() {
             <Button
               variant="ghost"
               size="icon"
-              className="bg-white bg-opacity-70"
+              className="bg-white rounded-full shadow p-2 group cursor-pointer"
               onClick={handlePrevImg}
               aria-label="Previous image"
               disabled={activeImg === 0}
+            
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
             </Button>
           </div>
 
@@ -96,12 +107,12 @@ export default function ProductCard() {
             <Button
               variant="ghost"
               size="icon"
-              className="bg-white bg-opacity-70"
+              className="bg-white rounded-full shadow p-2 group cursor-pointer"
               onClick={handleNextImg}
               aria-label="Next image"
               disabled={activeImg === productsImgs.length - 1}
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
             </Button>
           </div>
         </div>
@@ -184,6 +195,100 @@ export default function ProductCard() {
         </div>
 
       </div>
+
+      {/* Gallery Modal (active state) */}
+      <AnimatePresence>
+        {showGallery && (
+          <>
+          {/* Overlay */}
+          <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40 bg-black"
+          onClick={() => setShowGallery(false)}
+          />
+
+          {/* Modal */}
+          <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+           className="fixed z-50 inset-0 flex items-center justify-center"
+          >
+
+            <div className="bg-transparent rounded-2xl shadow-xl p-6 relative max-w-lg w-full">
+              {/* close button */}
+              <button
+                className="absolute top-[-2rem] right-3 text-white text-4xl font-bold cursor-pointer hover:text-orange-400"
+                onClick={() => setShowGallery(false)}
+                aria-label="Close Gallery"
+              >
+                <X className="h-6 w-6" />
+              </button>
+
+              {/* Large Image */}
+              <motion.img
+                src={productsImgs[activeImg]}
+                alt="Sneakers"
+                className="w-full h-auto rounded-lg mb-4"
+                layoutId="product-image"
+              />
+
+              {/* Gallery Arrows */}
+              <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Previous Image"
+                    onClick={handlePrevImg}
+                    disabled={activeImg === 0}
+                    className='bg-white rounded-full shadow p-2 cursor-pointer group'
+                  >
+                    <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
+                  </Button>
+              </div>
+
+              <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Next Image"
+                    onClick={handleNextImg}
+                    disabled={activeImg === productsImgs.length - 1}
+                    className='bg-white rounded-full shadow p-2 cursor-pointer group'
+                  >
+                    <ChevronRight className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
+                  </Button>
+              </div>
+              {/* Thumbnail section */}
+              <div className="flex gap-3 mt-6 justify-center">
+                  {productsImgs.map((img, index) => (
+                    <button
+                    key={img}
+                    className={clsx(
+                      "w-16 h-16 overflow-hidden rounded-xl border-2",
+                      index === activeImg
+                      ? "border-orange-400 shadow-md"
+                      : "border-transparent opacity-80 hover:border-orange-400 hover:opacity-100"
+                    )}
+                    onClick={() => handleThumbnailClick(index)}
+                    aria-label={`Thumbnail ${index + 1}`}
+                    >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    </button>
+                  ))
+                  }
+              </div>
+            </div>
+          </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

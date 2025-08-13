@@ -61,7 +61,7 @@ export default function Navbar() {
                    </Button>
 
                    {/* Avatar/Profile */}
-                   <Avatar className="cursor-pointer hover:text-orange-500">
+                   <Avatar className="cursor-pointer border hover:border-orange-500 cursor-pointer">
                        <AvatarImage src={ImageAvatar} alt="User Avatar" />
                        <AvatarFallback>U</AvatarFallback>
                    </Avatar>
