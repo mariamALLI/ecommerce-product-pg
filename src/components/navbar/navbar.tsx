@@ -19,11 +19,9 @@ const NAV_LINK: { label: string; href: string }[] = [
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-    const [itemCount, setItemCount] = useState<number>(0);
+    // const [itemCount, setItemCount] = useState<number>(0);
 
-    function handleAddToCart() {
-        setItemCount(itemCount + 1);
-    }
+   
 
     return(
         <nav className="w-[95%] md:w-[80%] mx-auto p-4 bg-white">
@@ -58,7 +56,7 @@ export default function Navbar() {
                        <ShoppingCart className="h-6 w-6" />
                        {/* cart item count */}
                        <span className="absolute top-2 right-2 bg-orange-500 text-white rounded-full px-1 text-xs">
-                            {itemCount}
+                            {0}
                        </span>
                    </Button>
 
