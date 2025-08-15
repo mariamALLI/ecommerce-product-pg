@@ -15,21 +15,21 @@ import productImage3 from '../../assets/images/imageproduct3.jpg'
 import productImage4 from '../../assets/images/imageproduct4.jpg'
 
 // Product Images Array
-const productsImgs:string[] = [productImage1, productImage2, productImage3, productImage4]
+const productsImgs: string[] = [productImage1, productImage2, productImage3, productImage4]
 
 export default function ProductCard() {
   const [activeImg, setActiveImg] = useState<number>(0)
   const [showGallery, setShowGallery] = useState<boolean>(false)
   const [quantity, setQuantity] = useState<number>(0)
 
-type ProductData = {
-  company: string
-  title: string
-  description: string
-  price: number
-  discount: number
-  oldPrice: number
-}
+  type ProductData = {
+    company: string
+    title: string
+    description: string
+    price: number
+    discount: number
+    oldPrice: number
+  }
 
   // Product Data
   const productData: ProductData = {
@@ -43,19 +43,19 @@ type ProductData = {
   }
 
   // Cart Context
-  const { addItem } = useCart();
+  const { addItem } = useCart()
 
   const handleAddToCart = (): void => {
     // Check if quantity is greater than 0 before adding to cart
-   if (quantity > 0) {
-     addItem({
-       id: '1',
-       title: productData.title,
-       price: productData.price,
-       image: productsImgs[activeImg],
-       quantity,
-     });
-   }
+    if (quantity > 0) {
+      addItem({
+        id: '1',
+        title: productData.title,
+        price: productData.price,
+        image: productsImgs[activeImg],
+        quantity,
+      })
+    }
   }
 
   // Handlers
@@ -82,29 +82,6 @@ type ProductData = {
             onClick={() => setShowGallery(true)}
           />
 
-          {/* Desktop: show thumbnails below */}
-          {/* <div className="md:flex mt-6 gap-5 justify-center">
-                {productsImgs.map((img, indx) => (
-                    <button
-                    key={img}
-                    className={
-                        clsx("w-20 h-20 rounded-xl border-2 transition-all overflow-hidden",
-                            indx === activeImg 
-                            ? "border-[hsl(26, 100%, 55%)] shadow-md"
-                            : "border-transparent opacity-80 hover:border-[hsl(26, 100%, 55%)] hover:opacity-100"
-                        )
-                    }
-                    onClick={() => handleThumbnailClick(indx)}
-                    aria-label={`Show image ${indx + 1}`}
-                    >
-                    <img
-                        src={img}
-                        alt={`Thumbnail ${indx + 1}`}
-                        className="w-full h-full object-cover"
-                    />
-                    </button>
-                ))}
-                </div> */}
           {/* Mobile: show arrows */}
           <div className="md:hidden absolute inset-y-0 left-0 flex items-center">
             <Button
@@ -114,7 +91,6 @@ type ProductData = {
               onClick={handlePrevImg}
               aria-label="Previous image"
               disabled={activeImg === 0}
-            
             >
               <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
             </Button>
@@ -142,8 +118,8 @@ type ProductData = {
               className={clsx(
                 'w-20 h-20 rounded-xl border-2 overflow-hidden',
                 indx === activeImg
-                  ? 'border-orange-400 shadow-md'
-                  : 'border-transparent opacity-80 hover:border-orange-400 hover:opacity-100',
+                  ? 'border-orange shadow-md opacity-50 hover:opacity-100'
+                  : 'border-transparent  hover:border-orange hover:opacity-50',
               )}
               onClick={() => handleThumbnailClick(indx)}
               aria-label={`Show image ${indx + 1}`}
@@ -151,7 +127,7 @@ type ProductData = {
               <img
                 src={img}
                 alt={`Thumbnail ${indx + 1}`}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-lg hover:opacity-50"
               />
             </button>
           ))}
@@ -160,18 +136,20 @@ type ProductData = {
 
       {/* Product Details */}
       <div className="flex flex-col gap-6">
-        <span className="uppercase text-xs font-bold tracking-widest text-[hsl(219, 9%, 45%)]">
+        <span className="uppercase text-xs font-bold tracking-widest text-darkGrayishBlue">
           {productData.company}
         </span>
-        <h1 className="text-3xl text-[hsl(220, 13%, 13%)] md:text-4xl font-bold leading-snug">
+        <h1 className="text-3xl text-veryDarkBlue md:text-4xl font-bold leading-snug">
           {productData.title}
         </h1>
-        <p className="text-[hsl(223, 64%, 98%)] text-sm md:text-base">{productData.description}</p>
+        <p className="text-darkGrayishBlue text-sm md:text-base">{productData.description}</p>
 
         {/* Price Section */}
         <div className="flex items-center gap-4 mt-2">
-          <div className="text-2xl font-bold">${productData.price.toFixed(2)}</div>
-          <span className="bg-black text-white rounded-md px-2 py-1 text-sm font-bold">
+          <div className="text-2xl text-veryDarkBlue font-bold">
+            ${productData.price.toFixed(2)}
+          </div>
+          <span className="bg-veryDarkBlue text-white rounded-md px-2 py-1 text-sm font-bold">
             {Math.round(productData.discount * 100)}%
           </span>
           <span className="ml-4 text-gray-400 line-through font-bold">
@@ -184,127 +162,124 @@ type ProductData = {
           {/* Quantity selector */}
           <div className="flex items-center bg-gray-100 rounded-lg px-2 py-2 w-full md:w-32 justify-between">
             <Button
-            variant="ghost"
-            size="icon"
-            aria-label='decrease quantity'
-            onClick={handleDecreaseQuantity}
-            disabled={quantity === 0}
+              variant="ghost"
+              size="icon"
+              aria-label="decrease quantity"
+              onClick={handleDecreaseQuantity}
+              disabled={quantity === 0}
             >
-                <img src={Iconminus} alt="Decrease" className="h-2 w-4" />
+              <img src={Iconminus} alt="Decrease" className="h-2 w-4 hover:opacity-70" />
             </Button>
-             <span className="text-xl font-semibold">{quantity}</span>
-             <Button
-               variant="ghost"
-               size="icon"
-               aria-label='increase quantity'
-               onClick={handleIncreaseQuantity}
-             >
-               <img src={Iconplus} alt="Increase" className="h-4 w-4" />
-             </Button>
+            <span className="text-xl font-semibold">{quantity}</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="increase quantity"
+              onClick={handleIncreaseQuantity}
+            >
+              <img src={Iconplus} alt="Increase" className="h-4 w-4 hover:opacity-70" />
+            </Button>
           </div>
 
           {/* Add to cart button */}
           <Button
-            className="font-sans flex-1 bg-orange-400 p-[1.5rem] hover:bg-orange-600 text-white text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
+            className="font-sans flex-1 bg-orange p-[1.5rem] cursor-pointer hover:bg-orange-300 text-veryDarkBlue text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-6 w-6" />
             Add to Cart
           </Button>
         </div>
-
       </div>
 
       {/* Gallery Modal (active state) */}
       <AnimatePresence>
         {showGallery && (
           <>
-          {/* Overlay */}
-          <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.7 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-40 bg-black"
-          onClick={() => setShowGallery(false)}
-          />
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black"
+              onClick={() => setShowGallery(false)}
+            />
 
-          {/* Modal */}
-          <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.8, opacity: 0 }}
-           className="fixed z-50 inset-0 flex items-center justify-center"
-          >
+            {/* Modal */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="fixed z-50 inset-0 flex items-center justify-center"
+            >
+              <div className="bg-transparent rounded-2xl shadow-xl p-6 relative max-w-lg w-full">
+                {/* close button */}
+                <button
+                  className="absolute top-[-2rem] right-3 text-white text-4xl font-bold cursor-pointer hover:text-orange-400"
+                  onClick={() => setShowGallery(false)}
+                  aria-label="Close Gallery"
+                >
+                  <X className="h-6 w-6" />
+                </button>
 
-            <div className="bg-transparent rounded-2xl shadow-xl p-6 relative max-w-lg w-full">
-              {/* close button */}
-              <button
-                className="absolute top-[-2rem] right-3 text-white text-4xl font-bold cursor-pointer hover:text-orange-400"
-                onClick={() => setShowGallery(false)}
-                aria-label="Close Gallery"
-              >
-                <X className="h-6 w-6" />
-              </button>
+                {/* Large Image */}
+                <motion.img
+                  src={productsImgs[activeImg]}
+                  alt="Sneakers"
+                  className="w-full h-auto rounded-lg mb-4"
+                  layoutId="product-image"
+                />
 
-              {/* Large Image */}
-              <motion.img
-                src={productsImgs[activeImg]}
-                alt="Sneakers"
-                className="w-full h-auto rounded-lg mb-4"
-                layoutId="product-image"
-              />
-
-              {/* Gallery Arrows */}
-              <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                {/* Gallery Arrows */}
+                <div className="absolute left-2 top-1/2 -translate-y-1/2">
                   <Button
                     variant="ghost"
                     size="icon"
                     aria-label="Previous Image"
                     onClick={handlePrevImg}
                     disabled={activeImg === 0}
-                    className='bg-white rounded-full shadow p-2 cursor-pointer group'
+                    className="bg-white rounded-full shadow p-2 cursor-pointer group"
                   >
                     <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
                   </Button>
-              </div>
+                </div>
 
-              <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                <div className="absolute right-2 top-1/2 -translate-y-1/2">
                   <Button
                     variant="ghost"
                     size="icon"
                     aria-label="Next Image"
                     onClick={handleNextImg}
                     disabled={activeImg === productsImgs.length - 1}
-                    className='bg-white rounded-full shadow p-2 cursor-pointer group'
+                    className="bg-white rounded-full shadow p-2 cursor-pointer group"
                   >
                     <ChevronRight className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
                   </Button>
-              </div>
-              {/* Thumbnail section */}
-              <div className="flex gap-3 mt-6 justify-center">
+                </div>
+                {/* Thumbnail section */}
+                <div className="flex gap-3 mt-6 justify-center">
                   {productsImgs.map((img, index) => (
                     <button
-                    key={img}
-                    className={clsx(
-                      "w-16 h-16 overflow-hidden rounded-xl border-2 cursor-pointer",
-                      index === activeImg
-                      ? "border-orange-400 shadow-md"
-                      : "border-transparent opacity-80 hover:border-orange-400 hover:opacity-100"
-                    )}
-                    onClick={() => handleThumbnailClick(index)}
-                    aria-label={`Thumbnail ${index + 1}`}
+                      key={img}
+                      className={clsx(
+                        'w-16 h-16 overflow-hidden rounded-xl border-2 cursor-pointer',
+                        index === activeImg
+                          ? 'border-orange-400 shadow-md'
+                          : 'border-transparent opacity-80 hover:border-orange-400 hover:opacity-100',
+                      )}
+                      onClick={() => handleThumbnailClick(index)}
+                      aria-label={`Thumbnail ${index + 1}`}
                     >
-                    <img
-                      src={img}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
                     </button>
-                  ))
-                  }
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>

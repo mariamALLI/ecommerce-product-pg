@@ -1,6 +1,16 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@theme {
+  --color-orange: hsl(26, 100%, 55%);
+  --color-paleOrange: hsl(25, 100%, 94%);
+  --color-veryDarkBlue: hsl(220, 13%, 13%);
+  --color-darkGrayishBlue: hsl(219, 9%, 45%);
+  --color-grayishBlue: hsl(220, 14%, 75%);
+  --color-lightGrayishBlue: hsl(223, 64%, 98%);
+  --color-white: hsl(0, 0%, 100%);
+  --color-black75: rgba(0, 0, 0, 0.75);
+}
 
 @custom-variant dark (&:is(.dark *));
 
