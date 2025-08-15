@@ -1,10 +1,11 @@
 import { Menu, ShoppingCart, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import logo from '../../assets/images/logo.svg'
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'
 import ImageAvatar from '../../assets/images/imageavatar.png'
+import { Skeleton } from '../ui/skeleton'
 
 // Import Cart Modal & useCart hook
 import CartModal from '../cartModal/cartModal'
@@ -21,7 +22,16 @@ const NAV_LINK: { label: string; href: string }[] = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false)
   const [cartOpen, setCartOpen] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const { items } = useCart()
+
+  useEffect(function () {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <nav className="w-[95%] md:w-[80%] mx-auto p-4 bg-white">
@@ -42,16 +52,40 @@ export default function Navbar() {
         {/* desktop nav */}
         <ul className="hidden md:flex gap-8 items-center">
           {/* nav links */}
-          {NAV_LINK.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className="text-grayishBlue text-sm font-medium hover:text-darkGrayishBlue"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+          {loading ? (
+            <>
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-20" />
+            </>
+          ) : (
+            NAV_LINK.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  className="
+                  relative
+                  pb-2
+                  text-darkGrayishBlue
+                  hover:text-veryDarkBlue
+                  transition-colors
+                  after:content-['']
+                  after:absolute
+                after:left-0
+                after:bottom-[-1rem]
+                after:h-1
+                after:w-full
+                after:bg-orange
+                after:scale-x-0
+                after:transition-transform
+                after:origin-left
+                hover:after:scale-x-100"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          )}
         </ul>
 
         {/* icons */}
@@ -64,22 +98,35 @@ export default function Navbar() {
             className="relative"
             onClick={() => setCartOpen((open) => !open)}
           >
-            <ShoppingCart className="h-8 w-8" />
+            {loading ? (
+              <Skeleton className="h-8 w-8 rounded" />
+            ) : (
+              <ShoppingCart className="h-8 w-8" />
+            )}
+
             {/* cart item count */}
-            {items.length > 0 && (
+            {!loading && items.length > 0 && (
               <span className="absolute top-1 right-1 bg-orange text-xs rounded-full px-1 text-white font-bold">
                 {items.reduce((sum, i) => sum + i.quantity, 0)}
               </span>
             )}
           </Button>
           {/* Cart Modal */}
-          <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
+          {loading ? (
+            <Skeleton className="h-96 w-full rounded" />
+          ) : (
+            cartOpen && <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
+          )}
 
           {/* Avatar/Profile */}
-          <Avatar className="cursor-pointer border hover:border-orange cursor-pointer">
-            <AvatarImage src={ImageAvatar} alt="User Avatar" />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
+          {loading ? (
+            <Skeleton className="h-10 w-10 rounded-full" />
+          ) : (
+            <Avatar className="cursor-pointer border hover:border-orange cursor-pointer">
+              <AvatarImage src={ImageAvatar} alt="User Avatar" />
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+          )}
         </div>
       </div>
       <hr className="hidden sm:block border-gray-200 mb-4" />
@@ -107,14 +154,31 @@ export default function Navbar() {
               aria-label="close menu"
               onClick={() => setMobileOpen(false)}
             >
-              <X aria-label="close menu" className="h-6 w-6 rotate-90" />
+              <X aria-label="close menu" className="h-6 w-6" />
             </button>
 
             {NAV_LINK.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-lg font-bold text-grayishBlue hover:text-darkGrayishBlue"
+                className="relative
+                    text-lg
+                    font-semibold
+                    pb-2
+                    text-darkGrayishBlue
+                    hover:text-veryDarkBlue
+                    transition-colors
+                    after:content-['']
+                    after:absolute
+                    after:left-0
+                    after:bottom-[-1rem]
+                    after:h-1
+                    after:w-full
+                    after:bg-orange 
+                    after:scale-x-0
+                    after:transition-transform
+                    after:origin-left
+                    hover:after:scale-x-100"
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}

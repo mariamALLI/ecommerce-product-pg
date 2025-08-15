@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../ui/button'
 import { ChevronRight, ChevronLeft, ShoppingCart, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 import Iconminus from '../../assets/images/iconminus.svg'
 import Iconplus from '../../assets/images/iconplus.svg'
-
+import { Skeleton } from '../ui/skeleton'
 import { useCart } from '../../hooks/useCart'
 
 /*Image Import*/
@@ -21,6 +21,13 @@ export default function ProductCard() {
   const [activeImg, setActiveImg] = useState<number>(0)
   const [showGallery, setShowGallery] = useState<boolean>(false)
   const [quantity, setQuantity] = useState<number>(0)
+  const [loading, setIsLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+    // Simulate fetching data
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   type ProductData = {
     company: string
@@ -74,127 +81,152 @@ export default function ProductCard() {
       <div className="flex flex-col items-center">
         {/* Main Image */}
         <div className="relative w-full max-w-md aspect-square rounded-xl overflow-hidden group cursor-pointer">
-          <motion.img
-            src={productsImgs[activeImg]}
-            alt="Sneakers"
-            layoutId="product-image"
-            className="w-full h-full object-cover transition duration-300"
-            onClick={() => setShowGallery(true)}
-          />
-
+          {loading ? (
+            <Skeleton className="w-full h-full rounded-xl" />
+          ) : (
+            <motion.img
+              src={productsImgs[activeImg]}
+              alt="Sneakers"
+              layoutId="product-image"
+              className="w-full h-full object-cover transition duration-300"
+              onClick={() => setShowGallery(true)}
+            />
+          )}
           {/* Mobile: show arrows */}
-          <div className="md:hidden absolute inset-y-0 left-0 flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="bg-white rounded-full shadow p-2 group cursor-pointer"
-              onClick={handlePrevImg}
-              aria-label="Previous image"
-              disabled={activeImg === 0}
-            >
-              <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
-            </Button>
-          </div>
-
-          <div className="md:hidden absolute inset-y-0 right-0 flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="bg-white rounded-full shadow p-2 group cursor-pointer"
-              onClick={handleNextImg}
-              aria-label="Next image"
-              disabled={activeImg === productsImgs.length - 1}
-            >
-              <ChevronRight className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
-            </Button>
-          </div>
+          {!loading && (
+            <>
+              <div className="md:hidden absolute inset-y-0 left-0 flex items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="bg-white rounded-full shadow p-2 group cursor-pointer"
+                  onClick={handlePrevImg}
+                  aria-label="Previous image"
+                  disabled={activeImg === 0}
+                >
+                  <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
+                </Button>
+              </div>
+              <div className="md:hidden absolute inset-y-0 right-0 flex items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="bg-white rounded-full shadow p-2 group cursor-pointer"
+                  onClick={handleNextImg}
+                  aria-label="Next image"
+                  disabled={activeImg === productsImgs.length - 1}
+                >
+                  <ChevronRight className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
-
         {/* thumbnails below image */}
         <div className="hidden md:block mt-4 flex gap-8 justify-center">
-          {productsImgs.map((img, indx) => (
-            <button
-              key={img}
-              className={clsx(
-                'w-20 h-20 rounded-xl border-2 overflow-hidden',
-                indx === activeImg
-                  ? 'border-orange shadow-md opacity-50 hover:opacity-100'
-                  : 'border-transparent  hover:border-orange hover:opacity-50',
-              )}
-              onClick={() => handleThumbnailClick(indx)}
-              aria-label={`Show image ${indx + 1}`}
-            >
-              <img
-                src={img}
-                alt={`Thumbnail ${indx + 1}`}
-                className="w-full h-full object-cover rounded-lg hover:opacity-50"
-              />
-            </button>
-          ))}
+          {loading
+            ? Array(4)
+                .fill(0)
+                .map((_, indx) => (
+                  <Skeleton key={indx} className="w-20 h-20 rounded-xl" />
+                ))
+            : productsImgs.map((img, indx) => (
+                <button
+                  key={img}
+                  className={clsx(
+                    'w-20 h-20 rounded-xl border-2 overflow-hidden',
+                    indx === activeImg
+                      ? 'border-orange shadow-md opacity-50 hover:opacity-100'
+                      : 'border-transparent  hover:border-orange hover:opacity-50',
+                  )}
+                  onClick={() => handleThumbnailClick(indx)}
+                  aria-label={`Show image ${indx + 1}`}
+                >
+                  <img
+                    src={img}
+                    alt={`Thumbnail ${indx + 1}`}
+                    className="w-full h-full object-cover rounded-lg hover:opacity-50"
+                  />
+                </button>
+              ))}
         </div>
       </div>
-
       {/* Product Details */}
       <div className="flex flex-col gap-6">
-        <span className="uppercase text-xs font-bold tracking-widest text-darkGrayishBlue">
-          {productData.company}
-        </span>
-        <h1 className="text-3xl text-veryDarkBlue md:text-4xl font-bold leading-snug">
-          {productData.title}
-        </h1>
-        <p className="text-darkGrayishBlue text-sm md:text-base">{productData.description}</p>
-
-        {/* Price Section */}
-        <div className="flex items-center gap-4 mt-2">
-          <div className="text-2xl text-veryDarkBlue font-bold">
-            ${productData.price.toFixed(2)}
-          </div>
-          <span className="bg-veryDarkBlue text-white rounded-md px-2 py-1 text-sm font-bold">
-            {Math.round(productData.discount * 100)}%
-          </span>
-          <span className="ml-4 text-gray-400 line-through font-bold">
-            ${productData.oldPrice.toFixed(2)}
-          </span>
-        </div>
-
-        {/* Quantity and Add to Cart */}
-        <div className="flex flex-col md:flex-row gap-4 mt-2">
-          {/* Quantity selector */}
-          <div className="flex items-center bg-gray-100 rounded-lg px-2 py-2 w-full md:w-32 justify-between">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="decrease quantity"
-              onClick={handleDecreaseQuantity}
-              disabled={quantity === 0}
-            >
-              <img src={Iconminus} alt="Decrease" className="h-2 w-4 hover:opacity-70" />
-            </Button>
-            <span className="text-xl font-semibold">{quantity}</span>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="increase quantity"
-              onClick={handleIncreaseQuantity}
-            >
-              <img src={Iconplus} alt="Increase" className="h-4 w-4 hover:opacity-70" />
-            </Button>
-          </div>
-
-          {/* Add to cart button */}
-          <Button
-            className="font-sans flex-1 bg-orange p-[1.5rem] cursor-pointer hover:bg-orange-300 text-veryDarkBlue text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
-            onClick={handleAddToCart}
-          >
-            <ShoppingCart className="h-6 w-6" />
-            Add to Cart
-          </Button>
-        </div>
+        {loading ? (
+          <>
+            <Skeleton className="w-24 h-4" />
+            <Skeleton className="w-48 h-8" />
+            <Skeleton className="w-full h-16" />
+            <div className="flex items-center gap-4 mt-2">
+              <Skeleton className="w-20 h-8" />
+              <Skeleton className="w-12 h-6" />
+              <Skeleton className="w-16 h-6" />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4 mt-2">
+              <Skeleton className="w-full md:w-32 h-12" />
+              <Skeleton className="w-full h-12" />
+            </div>
+          </>
+        ) : (
+          <>
+            <span className="uppercase text-xs font-bold tracking-widest text-darkGrayishBlue">
+              {productData.company}
+            </span>
+            <h1 className="text-3xl text-veryDarkBlue md:text-4xl font-bold leading-snug">
+              {productData.title}
+            </h1>
+            <p className="text-darkGrayishBlue text-sm md:text-base">{productData.description}</p>
+            {/* Price Section */}
+            <div className="flex items-center gap-4 mt-2">
+              <div className="text-2xl text-veryDarkBlue font-bold">
+                ${productData.price.toFixed(2)}
+              </div>
+              <span className="bg-veryDarkBlue text-white rounded-md px-2 py-1 text-sm font-bold">
+                {Math.round(productData.discount * 100)}%
+              </span>
+              <span className="ml-4 text-gray-400 line-through font-bold">
+                ${productData.oldPrice.toFixed(2)}
+              </span>
+            </div>
+            {/* Quantity and Add to Cart */}
+            <div className="flex flex-col md:flex-row gap-4 mt-2">
+              {/* Quantity selector */}
+              <div className="flex items-center bg-gray-100 rounded-lg px-2 py-2 w-full md:w-32 justify-between">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="decrease quantity"
+                  onClick={handleDecreaseQuantity}
+                  disabled={quantity === 0}
+                >
+                  <img src={Iconminus} alt="Decrease" className="h-2 w-4 hover:opacity-70" />
+                </Button>
+                <span className="text-xl font-semibold">{quantity}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="increase quantity"
+                  onClick={handleIncreaseQuantity}
+                >
+                  <img src={Iconplus} alt="Increase" className="h-4 w-4 hover:opacity-70" />
+                </Button>
+              </div>
+              {/* Add to cart button */}
+              <Button
+                className="font-sans flex-1 bg-orange p-[1.5rem] cursor-pointer hover:bg-orange-300 text-veryDarkBlue text-lg font-semibold flex items-center justify-center gap-2 shadow-md"
+                onClick={handleAddToCart}
+              >
+                <ShoppingCart className="h-6 w-6" />
+                Add to Cart
+              </Button>
+            </div>
+          </>
+        )}
       </div>
-
       {/* Gallery Modal (active state) */}
       <AnimatePresence>
-        {showGallery && (
+        {showGallery && !loading && (
           <>
             {/* Overlay */}
             <motion.div
@@ -204,7 +236,6 @@ export default function ProductCard() {
               className="fixed inset-0 z-40 bg-black"
               onClick={() => setShowGallery(false)}
             />
-
             {/* Modal */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -221,7 +252,6 @@ export default function ProductCard() {
                 >
                   <X className="h-6 w-6" />
                 </button>
-
                 {/* Large Image */}
                 <motion.img
                   src={productsImgs[activeImg]}
@@ -229,7 +259,6 @@ export default function ProductCard() {
                   className="w-full h-auto rounded-lg mb-4"
                   layoutId="product-image"
                 />
-
                 {/* Gallery Arrows */}
                 <div className="absolute left-2 top-1/2 -translate-y-1/2">
                   <Button
@@ -243,7 +272,6 @@ export default function ProductCard() {
                     <ChevronLeft className="h-6 w-6 text-black group-hover:text-orange-400 transition-colors duration-200" />
                   </Button>
                 </div>
-
                 <div className="absolute right-2 top-1/2 -translate-y-1/2">
                   <Button
                     variant="ghost"
